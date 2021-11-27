@@ -1,0 +1,489 @@
+#:import Clipboard kivy.core.clipboard.Clipboard
+
+<HiddenIcon_ActionPrevious@ActionPrevious>:
+
+    with_previous: False
+    app_icon: 'icons/small_icon.png'
+    app_icon_width: 0
+    app_icon_height: 0
+    width: len(self.title+self.app_icon) * 6
+
+<SomeMenu_ActionBar>: #@ActionBar
+    id: bar
+    background_color: 0,0,0,0   
+    background_normal: ''
+    canvas.before:
+
+        Color:
+            rgb: 86/255, 0/255, 235/255
+
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [0]
+
+    ActionView:
+
+        id: ActionView
+
+        HiddenIcon_ActionPrevious:
+
+        ActionGroup:
+
+            id: App_ActionGroup
+            mode: 'spinner'
+            text: 'Box'
+
+            ActionButton:
+            
+                text: 'Home'
+                on_release: app.root.current = 'first'
+
+            ActionButton:
+
+                text: 'Option'
+                on_release: app.root.current = 'option'
+
+            ActionButton:
+
+                text: 'save'
+                on_release: app.root.current = 'save'
+            
+            ActionButton:
+                text:'export'
+                on_release: 
+                    bar.exporta()
+                
+
+<Check@CheckBox>
+
+    canvas.before:
+        Color:
+            rgb: 1,1,1
+
+        Rectangle:
+            pos:self.center_x-8, self.center_y-8
+            size:[16,16]
+
+        Color:
+            rgb: 22/255, 0/255, 59/255
+        Rectangle:
+            pos:self.center_x-7, self.center_y-7
+            size:[14,14]
+
+<Remove>:
+
+    spacing:2
+    id:remove
+    size_hint_y: None
+    height: '100px'  
+
+    Button:
+            
+        id: arquivo
+        text: ""
+        height: "100px"
+        size_hint: 1,None
+        on_press:
+            Clipboard.copy(root.ids.arquivo.text)
+            app.root.get_screen('savetext').ids.name.text = Clipboard.paste()
+            app.root.get_screen('savetext').ids.exclui.text = Clipboard.paste()
+            app.root.current = 'savetext'
+
+            remove.read(root.ids.arquivo.text)
+            remove.copy()
+            app.root.get_screen('savetext').ids.password.text = Clipboard.paste()
+
+        background_color: (0,0,0,0)
+        background_normal: ''
+        canvas.before:
+            Color:
+                rgba: 22/255, 0/255, 59/255, .3
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+    Button:
+        text:''
+        height: "100px"
+        width: "100px"
+        size_hint: None,None
+        on_release:
+            app.root.get_screen('save').ids.boxsave.remove_widget(root)
+            remove.RemoveFile(root.ids.arquivo.text)
+
+        background_normal: 'icons/Remove.png'
+        background_down: 'icons/RemoveRoxo.png'
+
+<First>:
+
+    id: first
+    display: datafirst
+    name: 'first'
+
+    BoxLayout:
+    
+        cols:1
+        rows:9
+        padding: 5
+        spacing: 10
+        orientation: 'vertical'
+        canvas.before:
+
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        SomeMenu_ActionBar:
+
+            id: ActionBar
+        
+        BoxLayout:
+
+            orientation: 'vertical'
+        
+            ScrollView: 
+
+                BoxLayout:
+
+                    orientation: 'vertical'   
+                    size_hint_y: None
+                    height: self.minimum_height
+
+                    BoxLayout:
+                        
+                        pos_hint: {'center_x': 0.5, 'top': 1}
+                        size_hint: 1, None
+                        spacing: '10px'
+                        height: '100px'
+
+                        Button:
+
+                            text: ""
+                            color: 22/255,0/255,59/255,1
+                            on_release: 
+                                first.copy(datafirst.text)
+                                app.root.current = 'savetext'
+                                app.root.get_screen('savetext').ids.name.text = 'Name'
+                                app.root.get_screen('savetext').ids.password.text = ''
+                                app.root.get_screen('savetext').ids.exclui.text = ''
+                                app.root.get_screen('savetext').ids.password.paste()
+
+                            height: "100px"
+                            width: "100px"
+                            size_hint: None,None
+                            background_normal: 'icons/Save.png'
+                            background_down: 'icons/SaveRoxo.png'
+                            
+
+                        TextInput:
+
+                            id: datafirst
+                            text: "Password"
+                            hint_text: 'Password'
+                            multiline: False
+                            foreground_color: 22/255,0/255,59/255,1
+                            height: "100px"
+                            size_hint: 1,None
+
+                        Button:
+
+                            on_press: first.copy(datafirst.text)
+                            background_normal: 'icons/copy.png'
+                            background_down: 'icons/CopyRoxo.png'
+
+                            height: "100px"
+                            width: "100px"
+                            size_hint: None,None
+
+                    Label:
+
+                        height: "500px"
+                        size_hint: 1,None
+
+                    BoxLayout:
+
+                        orientation: "vertical"
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                        height: '300px'
+                        size_hint: 0.7, None
+                        
+                        Button:
+
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_press: digito.text = str(int(digito.text)+1)
+                            background_normal: 'icons/more.png'
+                            background_down: 'icons/MoreRoxo.png'
+                            height: "100px"
+                            width: "100px"
+                            size_hint: None,None
+
+                        Label:
+
+                            id: digito
+                            text: "8"
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            color: 22/255,0/255,59/255,1
+                            height: "100px"
+                            width: "100px"
+                            size_hint: None,None
+
+                        Button:
+
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_press: if digito.text > "1": digito.text = str(int(digito.text)-1) 
+                            background_normal: 'icons/menos.png'
+                            background_down: 'icons/MenosRoxo.png'
+                        
+                            height: "100px"
+                            width: "100px"
+                            size_hint: None,None
+
+                    AnchorLayout:
+
+                        anchor_x: "center"
+                        anchor_y: "center"
+                        height: '250px'
+                        size_hint: 1, None
+
+                        Button: 
+
+                            on_press: 
+                                datafirst.text = "Password"
+                                first.logic(digito.text,app.root.get_screen('option'))
+
+                            background_normal: 'icons/generator.png'
+                            background_down: 'icons/GeneratorRoxo.png'  
+                            
+                            height: "100px"
+                            width: "320px"
+                            size_hint: None,None           
+                            
+                        Label:
+
+                            height: "110px"
+                            size_hint: 1,None
+    
+<Option>:
+
+    name: 'option'
+
+    BoxLayout:
+    
+        cols:1
+        rows:9
+        padding: 5
+        spacing: 10
+        orientation: 'vertical'
+        canvas.before:
+
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        SomeMenu_ActionBar:
+
+            id: ActionBar    
+
+        BoxLayout:
+
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: 1, 1
+            cols: 2
+            orientation:"horizontal"
+            canvas.before:
+
+                Color:
+                    rgba: 22/255, 0/255, 59/255, 1
+
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+
+            BoxLayout:
+            
+                pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+                size_hint: 1, 0.5
+                orientation:"vertical"
+
+                Label:
+                    text: "all"
+                Check:
+                    id: all
+                    active: True
+
+                Label:
+                    text: "Numbers"
+                Check:
+                    id: numbers
+                    active: True
+                    
+                Label:
+                    text: "lowercase"
+                Check:
+                    id: lower
+                    active: True
+                            
+            BoxLayout:
+
+                pos_hint: {'center_x': 0.5, 'center_y': 0.7}
+                size_hint: 1, 0.5
+                orientation:"vertical"
+
+                Label:
+                    text: "Letters"
+                Check:
+                    id: letters
+                    active: True
+                        
+                Label:
+                    text: "Symbols"
+                Check:
+                    id: symbols
+                    active: True
+
+                Label:
+                    text: "Uppercase"
+                Check:
+                    id: upper
+                    active: True    
+
+<Save>:
+
+    id: save
+    name: 'save'
+
+    BoxLayout:
+    
+        cols:1
+        rows:9
+        padding: 5
+        spacing: 10
+        orientation: 'vertical'
+        canvas.before:
+
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        SomeMenu_ActionBar:
+
+            id: ActionBar    
+
+        BoxLayout:
+
+            orientation: 'vertical'
+        
+            ScrollView:
+
+                BoxLayout:
+                    spacing: 3
+                    id: boxsave
+                    orientation: 'vertical'   
+                    size_hint_y: None
+                    height: self.minimum_height
+
+            BoxLayout:
+                height: "120px"
+                size_hint: 1,None
+                
+                AnchorLayout:
+                    anchor_x: "center"
+                    anchor_y: "center"
+                    size_hint: 1, 1
+                    
+                    Button:
+                        on_release:  
+                            app.root.current = 'savetext'
+                            app.root.get_screen('savetext').ids.name.text = 'Name'
+                            app.root.get_screen('savetext').ids.password.text = ''
+
+                        height: "100px"
+                        width: "320px"
+                        size_hint: None,None
+                        background_normal: 'icons/creator.png'
+                        background_down: 'icons/creator_roxo.png'
+
+<SaveText>:
+    id: savetext
+    name: 'savetext'
+
+    BoxLayout:
+    
+        cols:1
+        rows:9
+        padding: 5
+        spacing: 10
+        orientation: 'vertical'
+        canvas.before:
+
+            Color:
+                rgba: 1,1,1,1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        SomeMenu_ActionBar:
+
+            id: ActionBar
+
+        BoxLayout:
+
+            orientation: 'vertical'
+            spacing: 3
+
+            BoxLayout:
+
+                size_hint_y: None
+                height: '100px'
+
+                TextInput:
+
+                    id:name
+                    text:'Name'
+                    hint_text: 'Name'
+
+                Button:
+
+                    size_hint: None,None
+                    height: '100px'
+                    width: '100px'
+                    text: ""
+                    on_release: 
+
+                        savetext.RemoveFile(root.ids.exclui.text)
+                        savetext.escrever(app.root.get_screen('savetext').ids.name.text,app.root.get_screen('savetext').ids.password.text)
+                        
+                        app.root.get_screen('save').ids.boxsave.clear_widgets()
+
+                        app.root.get_screen('savetext').ids.name.text = ''
+                        app.root.get_screen('savetext').ids.password.text = ''
+                        app.root.get_screen('savetext').ids.exclui.text = ''
+
+                        savetext.creator(app.root.get_screen('save'))
+
+                        app.root.current = 'save'
+                    
+                    background_normal: 'icons/Save.png'
+                    background_down: 'icons/SaveRoxo.png'
+
+            BoxLayout:
+                
+                TextInput:
+                    id: password
+                    text:''
+                    hint_text: 'Text'
+
+                TextInput:
+                    id: exclui
+                    text:''
+                    size_hint: None, None
+                    height: '0px'
+                    width: '0px'
+
